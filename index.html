@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Device Screen Pixels</title>
+  <style>
+    #output {
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div id="output"></div>
+  <script>
+    const output = document.querySelector("#output");
+
+    // Print device pixel ratio
+    output.textContent += `Device Pixel Ratio: ${window.devicePixelRatio}\n`;
+
+    // Print screen resolution
+    output.textContent += `Screen Resolution: ${screen.width} x ${screen.height}\n`;
+
+    // Print window size
+    output.textContent += `Window Size: ${window.innerWidth} x ${window.innerHeight}\n`;
+
+    // Print device pixel ratio using media queries
+    const media = matchMedia("(resolution: 1dppx)");
+    media.addEventListener("change", () => {
+      output.textContent += `Device Pixel Ratio (media query): ${media.matches ? 1 : window.devicePixelRatio}\n`;
+    });
+  </script>
+</body>
+</html>
