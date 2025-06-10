@@ -1,31 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Device Screen Pixels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Poppins:wght@700&amp;display=swap" rel="stylesheet" />
   <style>
-    #output {
-      font-family: monospace;
+    :root {
+      --color-dark: #111827;
+      --color-gray: #6b7280;
+      --color-light: #f9fafb;
+      --color-white: #ffffff;
+      --color-black: #000000;
+      --border-radius: 0.75rem;
+      --max-width: 1200px;
+      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-heading: 'Poppins', 'Inter', system-ui, sans-serif;
+      --transition-speed: 0.3s;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--color-white);
+      font-family: var(--font-sans);
+      color: var(--color-gray);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 18px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      background-color: var(--color-white);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: var(--font-heading);
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--color-dark);
+      letter-spacing: 0.05em;
+      user-select: none;
+    }
+
+    main {
+      max-width: var(--max-width);
+      margin: 2rem auto 4rem auto;
+      padding: 0 1rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 4rem 1rem 5rem 1rem;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      color: var(--color-dark);
+      margin-bottom: 0.5rem;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--color-gray);
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+      font-weight: 500;
+    }
+
+    .screen-size {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2rem;
+      color: var(--color-black);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      user-select: text;
+    }
+
+    .info-card {
+      background-color: var(--color-white);
+      padding: 2rem 3rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 8px 20px rgb(0 0 0 / 0.08);
+      max-width: 600px;
+      margin: 0 auto;
+      font-family: monospace, monospace;
+      white-space: pre-line;
+      color: var(--color-dark);
+      font-size: 1.125rem;
+      user-select: text;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 1rem;
+      }
+
+      .hero {
+        padding: 3rem 1rem 4rem 1rem;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .screen-size {
+        font-size: 1.5rem;
+      }
+
+      .info-card {
+        padding: 1.5rem 1.8rem;
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="output"></div>
+  <header>
+    <div class="logo" aria-label="Device Pixel Info Logo" role="img">PixelInfo</div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">Discover Your Device Screen Details</h1>
+      <p>Quickly view your device's pixel ratio, screen resolution, and current window size with elegant clarity.</p>
+      <div class="screen-size" aria-live="polite" aria-atomic="true" id="dynamicWindowSize" tabindex="0"></div>
+    </section>
+
+    <section aria-labelledby="device-info-title" class="device-info">
+      <div id="output" class="info-card" role="contentinfo" aria-live="polite" aria-atomic="true" tabindex="0">
+      </div>
+    </section>
+  </main>
+
   <script>
     const output = document.querySelector("#output");
+    const dynamicWindowSize = document.getElementById("dynamicWindowSize");
 
-    // Print device pixel ratio
-    output.textContent += `Device Pixel Ratio: ${window.devicePixelRatio}\n`;
+    function updateInfo() {
+      dynamicWindowSize.textContent = `Window Size: ${window.innerWidth} × ${window.innerHeight}`;
+      output.textContent =
+        `Device Pixel Ratio: ${window.devicePixelRatio}\n` +
+        `Screen Resolution: ${screen.width} × ${screen.height}\n` +
+        `Window Size: ${window.innerWidth} × ${window.innerHeight}`;
+    }
 
-    // Print screen resolution
-    output.textContent += `Screen Resolution: ${screen.width} x ${screen.height}\n`;
+    updateInfo();
 
-    // Print window size
-    output.textContent += `Window Size: ${window.innerWidth} x ${window.innerHeight}\n`;
-
-    // Print device pixel ratio using media queries
-    const media = matchMedia("(resolution: 1dppx)");
-    media.addEventListener("change", () => {
-      output.textContent += `Device Pixel Ratio (media query): ${media.matches ? 1 : window.devicePixelRatio}\n`;
+    window.addEventListener('resize', () => {
+      updateInfo();
     });
   </script>
 </body>
